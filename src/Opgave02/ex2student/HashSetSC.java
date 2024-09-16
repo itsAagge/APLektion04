@@ -1,5 +1,7 @@
 package Opgave02.ex2student;
 
+import org.w3c.dom.Node;
+
 /**
  * HashSetSC implements a hash set using separate chaining.
  * Note: null is not allowed as an element in the set.
@@ -58,6 +60,7 @@ public class HashSetSC<E> {
         }
         table[hash] = node;
         size++;
+        if ((size * 1.0) / table.length > 0.75) rehash();
         return true;
     }
 
@@ -98,17 +101,33 @@ public class HashSetSC<E> {
 
     @Override
     public String toString() {
-        String s = "[";
+        String s = "";
         for (int i = 0; i < table.length; i++) {
-            Node<E> node = table[i];
-            s += node.data.toString() + ",";
-            while (node.next != null) {
-                node = node.next;
-                s += node.data + ",";
+            if (table[i] != null) {
+                Node<E> node = table[i];
+                s += node.data.toString() + " ";
+                while (node.next != null) {
+                    node = node.next;
+                    s += node.data;
+                    if (node.next != null) s += " ";
+                }
             }
         }
-        s += "]";
         return s;
+    }
+
+    private void rehash() {
+        Node<E>[] oldTable = table;
+        @SuppressWarnings("unchecked")
+        Node<E>[] emptyTable = (Node<E>[]) new Node[oldTable.length * 2];
+        table = emptyTable;
+        size = 0;
+        for (Node<E> node : oldTable) {
+            while (node != null) {
+                this.add(node.data);
+                node = node.next;
+            }
+        }
     }
 
     //-------------------------------------------------------------------------

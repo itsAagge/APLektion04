@@ -1,5 +1,7 @@
 package Opgave03.ex3student;
 
+import org.w3c.dom.Node;
+
 /**
  * HashSetLP implements a hash set using linear probing.
  * Note: null is not allowed as an element in the set.
@@ -36,7 +38,18 @@ public class HashSetLP<E> {
      * Pre: element != null.
      */
     public boolean contains(E element) {
-        // TODO
+        int i = hash(element);
+        int count = 0;
+        while (count < table.length) {
+            if (table[i] == null || table[i] == deleted) return false;
+            if (table[i] == element) return true;
+            if (count == table.length - 1) {
+                i = 0;
+            } else {
+                i++;
+            }
+            count++;
+        }
         return false;
     }
 
@@ -46,7 +59,22 @@ public class HashSetLP<E> {
      * Pre: element != null.
      */
     public boolean add(E element) {
-        // TODO
+        int i = hash(element);
+        int count = 0;
+        while (count < table.length) {
+            if (table[i] == null || table[i] == deleted) {
+                table[i] = element;
+                size++;
+                if ((size * 1.0) / table.length > 0.5) rehash();
+                return true;
+            }
+            if (count == table.length - 1) {
+                i = 0;
+            } else {
+                i++;
+            }
+            count++;
+        }
         return false;
     }
 
@@ -56,7 +84,24 @@ public class HashSetLP<E> {
      * Pre: element != null.
      */
     public boolean remove(E element) {
-        // TODO
+        if (this.contains(element)) {
+            int i = hash(element);
+            int count = 0;
+            while (count < table.length) {
+                if (table[i] == null || table[i] == deleted) return false;
+                if (table[i] == element) {
+                    table[i] = deleted;
+                    size--;
+                    return true;
+                }
+                if (count == table.length - 1) {
+                    i = 0;
+                } else {
+                    i++;
+                }
+                count++;
+            }
+        }
         return false;
     }
 
@@ -69,7 +114,23 @@ public class HashSetLP<E> {
 
     @Override
     public String toString() {
-        // TODO
-        return null;
+        String s = "";
+        for (E e : table) {
+            if (e != null && e != deleted) s += e + " ";
+        }
+        return s;
+    }
+
+    private void rehash() {
+        E[] oldTable = table;
+        @SuppressWarnings("unchecked")
+        E[] emptyTable = (E[]) new Object[oldTable.length * 2];
+        table = emptyTable;
+        size = 0;
+        for (E e : oldTable) {
+            if (e != null && e != deleted) {
+                this.add(e);
+            }
+        }
     }
 }
