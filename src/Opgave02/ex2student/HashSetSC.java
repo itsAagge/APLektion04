@@ -1,4 +1,4 @@
-package ex2student;
+package Opgave02.ex2student;
 
 /**
  * HashSetSC implements a hash set using separate chaining.

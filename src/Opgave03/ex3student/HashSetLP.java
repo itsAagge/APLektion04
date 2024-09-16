@@ -1,4 +1,4 @@
-package ex3student;
+package Opgave03.ex3student;
 
 /**
  * HashSetLP implements a hash set using linear probing.
